@@ -13,3 +13,4 @@ authors = ["paul@colomiets.name"]
 
 [dependencies]
 libc = "0.2.18"
+errno = "0.2"

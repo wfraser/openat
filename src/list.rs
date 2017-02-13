@@ -5,7 +5,9 @@ use std::os::unix::io::AsRawFd;
 use std::os::unix::ffi::OsStrExt;
 
 use ffi;
-use libc;
+use libc_ext as libc;
+
+use errno::*;
 
 use {Dir, Entry, SimpleType};
 
@@ -39,11 +41,11 @@ impl DirIter {
     unsafe fn next_entry(&mut self) -> io::Result<Option<*const libc::dirent>>
     {
         // Reset errno to detect if error occurred
-        *libc::__errno_location() = 0;
+        set_errno(Errno(0));
 
         let entry = ffi::readdir(self.dir);
         if entry == ptr::null() {
-            if *libc::__errno_location() == 0 {
+            if errno() == Errno(0) {
                 return Ok(None)
             } else {
                 return Err(io::Error::last_os_error());

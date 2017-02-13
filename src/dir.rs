@@ -6,13 +6,12 @@ use std::os::unix::io::{AsRawFd, RawFd, FromRawFd};
 use std::os::unix::ffi::{OsStringExt};
 use std::path::{PathBuf};
 
-use libc;
 use ffi;
 use metadata::{self, Metadata};
+use libc_ext as libc;
 use list::{DirIter, open_dir};
 
 use {Dir, DirFd, AsPath};
-
 
 impl Dir {
     /// Creates a directory descriptor that resolves paths relative to current
@@ -104,7 +103,7 @@ impl Dir {
         unsafe {
             let res = libc::openat(self.as_raw_fd(), path.as_ptr(),
                             flags|libc::O_CLOEXEC|libc::O_NOFOLLOW,
-                            mode);
+                            mode as libc::c_uint);
             if res < 0 {
                 Err(io::Error::last_os_error())
             } else {

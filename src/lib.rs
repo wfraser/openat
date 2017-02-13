@@ -44,9 +44,11 @@
 #![warn(missing_docs)]
 
 extern crate libc;
+extern crate errno;
 
 mod dir;
 mod ffi;
+mod libc_ext;
 mod list;
 mod name;
 mod filetype;
@@ -98,4 +100,3 @@ mod test {
         mem::forget(d);
     }
 }
-
